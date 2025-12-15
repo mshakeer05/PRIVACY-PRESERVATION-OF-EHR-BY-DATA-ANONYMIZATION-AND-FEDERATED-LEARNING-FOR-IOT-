@@ -1,0 +1,15 @@
+import numpy as np
+import pandas as pd
+
+# Simulating IoT sensor data
+np.random.seed(42)
+iot_data = pd.DataFrame({
+    "patient_id": np.random.randint(1, 100001, 100000),
+    "timestamp": pd.date_range(start="2023-01-01", periods=100000, freq='min'),
+    "heart_rate": np.random.normal(75, 10, 100000),
+    "spo2": np.random.normal(98, 1, 100000),
+    "temperature": np.random.normal(36.6, 0.5, 100000),
+    "steps": np.random.poisson(30, 100000)
+})
+print("IoT Data Simulated:", iot_data.shape)
+iot_data.head()

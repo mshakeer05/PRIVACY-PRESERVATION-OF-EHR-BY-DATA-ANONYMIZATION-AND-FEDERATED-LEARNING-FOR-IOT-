@@ -1,0 +1,41 @@
+import socket
+import ssl
+import threading
+import pickle
+
+# Simulated TLS-secured server
+def start_secure_server(host='localhost', port=8888):
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+    context.load_cert_chain(certfile='server.crt', keyfile='server.key')
+
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind((host, port))
+    server_socket.listen(5)
+    secure_socket = context.wrap_socket(server_socket, server_side=True)
+    print(f"[SERVER] Listening on {host}:{port} with TLS encryption...")
+
+    def client_handler(client_conn):
+        data = client_conn.recv(4096)
+        weights = pickle.loads(data)
+        print("[SERVER] Received encrypted model weights.")
+        client_conn.close()
+
+    while True:
+        client_conn, addr = secure_socket.accept()
+        print(f"[SERVER] Connection from {addr}")
+        threading.Thread(target=client_handler, args=(client_conn,)).start()
+
+
+# Simulated TLS-secured IoT Node client
+def send_model_weights(weights_dict, host='localhost', port=8888):
+    context = ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT)
+    context.load_verify_locations('server.crt')
+    context.check_hostname = False
+    context.verify_mode = ssl.CERT_REQUIRED
+
+    raw_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    secure_socket = context.wrap_socket(raw_socket, server_hostname=host)
+    secure_socket.connect((host, port))
+    secure_socket.send(pickle.dumps(weights_dict))
+    print("[CLIENT] Sent model weights securely.")
+    secure_socket.close()

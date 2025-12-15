@@ -1,0 +1,52 @@
+import numpy as np
+
+def secure_sum(weights_list):
+    """Simulate secure homomorphic encryption by summing without decrypting (conceptual)."""
+    sum_weights = {}
+    for key in weights_list[0].keys():
+        sum_weights[key] = np.sum([client[key] for client in weights_list], axis=0)
+    print("[SecureAgg] Homomorphic sum simulated.")
+    return sum_weights
+def secure_avg(weights_list, num_clients):
+    sum_weights = secure_sum(weights_list)
+    return {k: v / num_clients for k, v in sum_weights.items()}
+from aggregation.fedavg import fed_avg
+from nodes.client_node import train_local_model
+from secure_aggregation.secure_sum import secure_sum
+
+# Initialize clients and parameters
+CLIENT_IDS = [1, 2, 3, 4, 5]
+DATA_PATHS = [f"anonymized_k5_client_{i}.csv" for i in CLIENT_IDS]
+INITIAL_MODEL = {
+    "layer1": [0.1, 0.1, 0.1],
+    "layer2": [0.2, 0.2, 0.2],
+    "bias1": [0.0],
+    "bias2": [0.0]
+}
+
+# Simulation parameters
+rounds = 3
+client_dropout_rate = 0.2
+
+current_model = INITIAL_MODEL
+
+for round_num in range(1, rounds + 1):
+    print(f"\n=== Federated Round {round_num} ===")
+
+    # Random client selection
+    selected_clients = random.sample(CLIENT_IDS, k=int(len(CLIENT_IDS) * (1 - client_dropout_rate)))
+    print(f"[Round-{round_num}] Selected Clients: {selected_clients}")
+
+    # Local training
+    local_updates = []
+    for cid in selected_clients:
+        update = train_local_model(cid, f"data/anonymized_k5_client_{cid}.csv", current_model)
+        local_updates.append(update)
+
+    # Aggregate
+    current_model = fed_avg(local_updates)
+
+    # Optionally: Replace with secure average
+    # current_model = secure_avg(local_updates, len(selected_clients))
+
+    print(f"[Round-{round_num}] Updated Model: {current_model}")

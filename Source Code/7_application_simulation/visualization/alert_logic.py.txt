@@ -1,0 +1,9 @@
+def check_alerts(row):
+    alerts = []
+    if row["SpO2"] < 95:
+        alerts.append("Low Oxygen")
+    if row["Heart Rate"] > 100:
+        alerts.append("Tachycardia")
+    if row["Temperature"] > 38:
+        alerts.append("Fever")
+    return ", ".join(alerts) if alerts else "Stable"

@@ -1,0 +1,13 @@
+# Federated Learning Settings
+federated_learning:
+  rounds: 3
+  clients: 5
+  sample_fraction: 0.8
+  initial_model:
+    layer1: [0.1, 0.1, 0.1]
+    layer2: [0.2, 0.2, 0.2]
+    bias1: [0.0]
+    bias2: [0.0]
+  aggregation_method: "fed_avg"  # or "secure_avg"
+  allow_dropout: true
+  dropout_rate: 0.2

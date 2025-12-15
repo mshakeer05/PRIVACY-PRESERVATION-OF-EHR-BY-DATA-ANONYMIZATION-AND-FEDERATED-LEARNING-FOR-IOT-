@@ -1,0 +1,70 @@
+import dash
+from dash import html, dcc, dash_table
+import pandas as pd
+from dash.dependencies import Input, Output
+
+from data_simulator import simulate_vitals
+from alert_logic import check_alerts
+from health_predictor import predict_health_status
+from visual_components import (
+    plot_alert_status, plot_prediction_distribution, plot_vitals_table
+)
+
+app = dash.Dash(__name__)
+app.title = "Smart Healthcare IoT Dashboard"
+
+# Initial simulated data
+df = simulate_vitals()
+df["Prediction"] = df.apply(predict_health_status, axis=1)
+df["Alert"] = df.apply(check_alerts, axis=1)
+
+# Layout
+app.layout = html.Div([
+    html.H1("🩺 Smart City Healthcare Dashboard", style={"textAlign": "center"}),
+
+    dcc.Interval(id='data-refresh', interval=5000, n_intervals=0),
+
+    html.Div([
+        html.Div([
+            dcc.Graph(id='pie-chart'),
+        ], className='six columns'),
+
+        html.Div([
+            dcc.Graph(id='alert-bar'),
+        ], className='six columns')
+    ], className='row'),
+
+    html.Div([
+        dcc.Graph(id='scatter-matrix')
+    ]),
+
+    html.Div([
+        dash_table.DataTable(
+            id='vitals-table',
+            columns=[{"name": i, "id": i} for i in df.columns],
+            page_size=10,
+            style_table={'overflowX': 'auto'},
+            style_cell={'textAlign': 'center'},
+        )
+    ])
+], style={'margin': '30px'})
+
+# Callbacks
+@app.callback(
+    [Output('vitals-table', 'data'),
+     Output('pie-chart', 'figure'),
+     Output('alert-bar', 'figure'),
+     Output('scatter-matrix', 'figure')],
+    Input('data-refresh', 'n_intervals')
+)
+def update_dashboard(n):
+    df = simulate_vitals()
+    df["Prediction"] = df.apply(predict_health_status, axis=1)
+    df["Alert"] = df.apply(check_alerts, axis=1)
+    pie = plot_prediction_distribution(df)
+    alerts = plot_alert_status(df)
+    scatter = plot_vitals_table(df)
+    return df.to_dict("records"), pie, alerts, scatter
+
+if __name__ == "__main__":
+    app.run_server(debug=True)

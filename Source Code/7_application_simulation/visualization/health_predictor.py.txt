@@ -1,0 +1,10 @@
+import numpy as np
+
+def predict_health_status(row):
+    # Simulated ML prediction logic
+    if row["SpO2"] < 94 or row["Heart Rate"] > 105:
+        return "Critical"
+    elif row["Temperature"] > 37.5:
+        return "At Risk"
+    else:
+        return "Normal"

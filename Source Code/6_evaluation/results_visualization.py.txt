@@ -1,0 +1,26 @@
+import matplotlib.pyplot as plt
+
+def plot_privacy_vs_utility(info_loss_list, disclosure_risk_list, ks):
+    plt.figure(figsize=(8, 6))
+    plt.plot(ks, info_loss_list, label='Information Loss', marker='o')
+    plt.plot(ks, disclosure_risk_list, label='Disclosure Risk', marker='x')
+    plt.title("Privacy vs Utility")
+    plt.xlabel("k-value")
+    plt.ylabel("Metric")
+    plt.legend()
+    plt.grid()
+    plt.show()
+
+def plot_accuracy_comparison(raw_acc, anon_acc):
+    plt.bar(["Raw Data", "Anonymized"], [raw_acc, anon_acc], color=['green', 'orange'])
+    plt.ylabel("Accuracy")
+    plt.title("Model Accuracy: Raw vs Anonymized")
+    plt.show()
+
+def plot_runtime(raw_t, anon_t, fed_t, centralized_t):
+    labels = ['Raw', 'Anonymized', 'Federated', 'Centralized']
+    times = [raw_t, anon_t, fed_t, centralized_t]
+    plt.bar(labels, times, color='purple')
+    plt.ylabel("Time (s)")
+    plt.title("Training Time Comparison")
+    plt.show()

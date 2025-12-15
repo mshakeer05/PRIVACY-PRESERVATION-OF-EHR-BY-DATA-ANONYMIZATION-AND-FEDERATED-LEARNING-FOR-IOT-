@@ -1,0 +1,22 @@
+from logger_config import setup_logger
+
+upload_logger = setup_logger("upload", "upload_log.json")
+anonymize_logger = setup_logger("anonymization", "anon_log.json")
+training_logger = setup_logger("training", "training_log.json")
+comm_logger = setup_logger("communication", "comm_log.json")
+
+# Upload event
+def log_upload(filename, user="system"):
+    upload_logger.info(f"File uploaded: {filename} by {user}")
+
+# Anonymization event
+def log_anonymization(input_file, output_file, info_loss, risk):
+    anonymize_logger.info(f"Anonymized {input_file} ➝ {output_file} | IL={info_loss:.4f} | Risk={risk:.4f}")
+
+# Federated training round event
+def log_training_round(round_id, clients, accuracy):
+    training_logger.info(f"Round {round_id} | Clients: {clients} | Accuracy: {accuracy:.4f}")
+
+# Communication event
+def log_comm_event(source, destination, msg_type, payload_size):
+    comm_logger.info(f"Comm: {source} ➝ {destination} | Type={msg_type} | Size={payload_size}B")

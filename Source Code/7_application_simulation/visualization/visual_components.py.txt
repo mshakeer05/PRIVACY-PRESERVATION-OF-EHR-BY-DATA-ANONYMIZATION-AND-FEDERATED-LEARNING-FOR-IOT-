@@ -1,0 +1,19 @@
+import plotly.express as px
+
+def plot_vitals_table(df):
+    return px.scatter_matrix(
+        df,
+        dimensions=["Heart Rate", "SpO2", "Temperature", "Steps"],
+        color="Prediction",
+        title="Vitals Scatter Matrix"
+    )
+
+def plot_prediction_distribution(df):
+    return px.pie(df, names="Prediction", title="Health Prediction Distribution")
+
+def plot_alert_status(df):
+    return px.bar(
+        df["Alert"].value_counts().reset_index(),
+        x="index", y="Alert",
+        title="Real-Time Alert Status", labels={"index": "Alert Type", "Alert": "Count"}
+    )

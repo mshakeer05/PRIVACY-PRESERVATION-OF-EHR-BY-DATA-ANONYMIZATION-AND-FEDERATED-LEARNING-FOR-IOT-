@@ -1,0 +1,25 @@
+import logging
+import os
+from logging.handlers import RotatingFileHandler
+import json
+
+LOG_FOLDER = "logs"
+os.makedirs(LOG_FOLDER, exist_ok=True)
+
+def setup_logger(name, log_file, level=logging.INFO):
+    formatter = logging.Formatter(json.dumps({
+        "timestamp": "%(asctime)s",
+        "level": "%(levelname)s",
+        "module": "%(module)s",
+        "message": "%(message)s"
+    }))
+
+    handler = RotatingFileHandler(
+        os.path.join(LOG_FOLDER, log_file), maxBytes=5000000, backupCount=5
+    )
+    handler.setFormatter(formatter)
+
+    logger = logging.getLogger(name)
+    logger.setLevel(level)
+    logger.addHandler(handler)
+    return logger

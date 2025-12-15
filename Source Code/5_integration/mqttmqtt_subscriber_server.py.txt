@@ -1,0 +1,36 @@
+import json
+import numpy as np
+from paho.mqtt import client as mqtt
+from aggregation.fedavg import fed_avg
+
+BROKER = 'localhost'
+PORT = 1883
+TOPIC = "fl/model_update"
+
+model_updates = []
+
+def on_message(client, userdata, msg):
+    global model_updates
+    payload = json.loads(msg.payload.decode())
+    print(f"[Server] Received model update from Client-{payload['client_id']}")
+
+    weights = payload["weights"]
+    weights = {k: np.array(v) for k, v in weights.items()}
+    model_updates.append(weights)
+
+    if len(model_updates) == 5:  # Simulate 5 clients per round
+        new_model = fed_avg(model_updates)
+        print("[Server] New Global Model:", new_model)
+        model_updates.clear()
+
+def start_mqtt_server():
+    client = mqtt.Client("central_server")
+    client.on_message = on_message
+    client.connect(BROKER, PORT)
+    client.subscribe(TOPIC)
+    print("[Server] Listening for model updates...")
+
+    client.loop_forever()
+
+if __name__ == '__main__':
+    start_mqtt_server()

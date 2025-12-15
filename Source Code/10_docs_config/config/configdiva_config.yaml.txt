@@ -1,0 +1,12 @@
+# DIVA Configuration Parameters
+anonymization:
+  k_value: 5
+  quasi_identifiers:
+    - Age
+    - Gender
+    - Postal Code
+  sensitive_attributes:
+    - Primary diagnostic code
+  normal_distribution_threshold: 0.05
+  generalization_strategy: "range"  # Options: range, mode, suppress
+  output_path: "uploads/anonymized_{filename}"

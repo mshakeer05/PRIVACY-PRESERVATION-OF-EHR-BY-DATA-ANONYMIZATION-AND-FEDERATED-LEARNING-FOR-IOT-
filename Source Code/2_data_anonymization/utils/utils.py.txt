@@ -1,0 +1,36 @@
+import json
+import os
+import datetime
+
+def log_info_loss(metric, log_file="info_loss_log.json"):
+    log_data = {
+        "timestamp": datetime.datetime.now().isoformat(),
+        "info_loss": metric
+    }
+
+    if os.path.exists(log_file):
+        with open(log_file, "r") as f:
+            logs = json.load(f)
+    else:
+        logs = []
+
+    logs.append(log_data)
+
+    with open(log_file, "w") as f:
+        json.dump(logs, f, indent=4)
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+import pandas as pd
+
+def encode_categorical(df, columns):
+    le = LabelEncoder()
+    for col in columns:
+        df[col] = le.fit_transform(df[col].astype(str))
+    return df
+
+def normalize_numeric(df, columns):
+    scaler = MinMaxScaler()
+    df[columns] = scaler.fit_transform(df[columns])
+    return df
+
+def merge_ehr_iot(ehr, iot):
+    return pd.merge(ehr, iot, left_on="Patient ID", right_on="patient_id", how="inner")

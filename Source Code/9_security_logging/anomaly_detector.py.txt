@@ -1,0 +1,33 @@
+import json
+import os
+
+def detect_anomalous_comm(log_file, threshold_size=1000000):
+    with open(log_file, 'r') as f:
+        lines = f.readlines()
+    
+    anomalies = []
+    for line in lines:
+        log = json.loads(line)
+        if "Size=" in log["message"]:
+            size = int(log["message"].split("Size=")[-1].replace("B", ""))
+            if size > threshold_size:
+                anomalies.append(log)
+
+    return anomalies
+
+def detect_low_accuracy(log_file, threshold=0.5):
+    with open(log_file, 'r') as f:
+        lines = f.readlines()
+
+    low_acc_rounds = []
+    for line in lines:
+        log = json.loads(line)
+        if "Accuracy" in log["message"]:
+            try:
+                acc = float(log["message"].split("Accuracy: ")[-1])
+                if acc < threshold:
+                    low_acc_rounds.append(log)
+            except:
+                continue
+
+    return low_acc_rounds

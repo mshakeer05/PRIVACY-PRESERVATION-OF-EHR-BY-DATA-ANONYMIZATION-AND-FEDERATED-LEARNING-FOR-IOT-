@@ -1,0 +1,57 @@
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+def plot_ndf_distribution(df, column):
+    plt.figure(figsize=(8, 5))
+    sns.histplot(df[column], kde=True, bins=30, color='skyblue')
+    plt.axvline(df[column].mean(), color='red', linestyle='--', label='Mean')
+    plt.title(f'NDF Histogram for {column}')
+    plt.legend()
+    plt.show()
+
+def plot_privacy_vs_utility(k_values, il_scores):
+    plt.figure(figsize=(10, 6))
+    sns.lineplot(x=k_values, y=il_scores, marker='o', color='green')
+    plt.title("Privacy vs Utility Trade-off")
+    plt.xlabel("k (Anonymity)")
+    plt.ylabel("Information Loss")
+    plt.grid(True)
+    plt.show()
+
+def plot_attribute_distribution(df, columns):
+    for col in columns:
+        plt.figure(figsize=(6, 4))
+        sns.countplot(data=df, x=col, palette="magma")
+        plt.xticks(rotation=45)
+        plt.title(f'Distribution of {col}')
+        plt.tight_layout()
+        plt.show()
+
+# Load anonymization input dataset (merged and pre-cleaned)
+df = pd.read_csv("merged_ehr_iot.csv")
+
+qi = ["Age", "Gender", "Postal Code"]
+sa = ["Primary diagnostic code"]
+
+# Preprocessing
+df = encode_categorical(df, qi)
+df = normalize_numeric(df, ["Age"])
+
+# Anonymization experiment
+k_vals = [3, 5, 7, 10]
+il_scores = []
+
+for k in k_vals:
+    diva = DIVAAnonymizer(df, k, qi, sa)
+    diva.apply_ndf_filter()
+    diva.cluster_diverse()
+    diva.generalize_clusters()
+    final_df = diva.integrate()
+    il = diva.compute_information_loss()
+    il_scores.append(il)
+    final_df.to_csv(f"anonymized_k{k}.csv", index=False)
+
+# Visualize results
+plot_privacy_vs_utility(k_vals, il_scores)
+
+

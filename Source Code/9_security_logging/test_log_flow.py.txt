@@ -1,0 +1,22 @@
+from security_logger import *
+from anomaly_detector import detect_anomalous_comm, detect_low_accuracy
+import random
+
+# Simulate logging
+log_upload("ehr_raw.csv", user="admin_user")
+log_anonymization("ehr_raw.csv", "anon_ehr.csv", info_loss=0.223, risk=0.031)
+log_training_round(round_id=1, clients=5, accuracy=0.84)
+log_training_round(round_id=2, clients=4, accuracy=0.42)  # simulate anomaly
+log_comm_event("client_1", "server", "model_upload", payload_size=832)
+log_comm_event("client_2", "server", "model_upload", payload_size=1034800)  # anomaly
+
+# Run detection
+print("\n🔍 Detected Anomalous Communications:")
+anomalies = detect_anomalous_comm("logs/comm_log.json")
+for a in anomalies:
+    print(a)
+
+print("\n📉 Low Accuracy Warnings:")
+low_acc = detect_low_accuracy("logs/training_log.json")
+for l in low_acc:
+    print(l)

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Federated Learning Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h1> Federated Learning Dashboard</h1>
+    <p>Backend is running. Use <strong>React UI</strong> for interaction.</p>
+    <div class="alert-box">
+      Tip: You can also serve logs here or embed charts with Plotly.
+    </div>
+  </div>
+</body>
+</html>

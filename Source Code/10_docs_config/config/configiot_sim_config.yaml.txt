@@ -1,0 +1,16 @@
+# IoT Sensor Simulation Configuration
+iot_simulation:
+  num_patients: 100
+  heart_rate:
+    mean: 75
+    std: 10
+  spo2:
+    mean: 98
+    std: 1
+  temperature:
+    mean: 36.7
+    std: 0.4
+  steps:
+    distribution: "poisson"
+    lambda: 100
+  anomaly_probability: 0.03

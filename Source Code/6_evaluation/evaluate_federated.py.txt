@@ -1,0 +1,28 @@
+import pandas as pd
+import numpy as np
+from nodes.client_node import train_local_model
+from aggregation.fedavg import fed_avg
+from evaluation_metrics import measure_runtime
+
+@measure_runtime
+def simulate_federated_rounds(paths, initial_weights, rounds=3):
+    model = initial_weights
+    for r in range(rounds):
+        updates = []
+        for path in paths:
+            weights = train_local_model(0, path, model)
+            updates.append(weights)
+        model = fed_avg(updates)
+    return model
+
+if __name__ == "__main__":
+    paths = [f"data/anonymized_k5_client_{i}.csv" for i in range(1, 6)]
+    init_model = {
+        "layer1": [0.1, 0.1, 0.1],
+        "layer2": [0.2, 0.2, 0.2],
+        "bias1": [0.0],
+        "bias2": [0.0]
+    }
+
+    model, fed_time = simulate_federated_rounds(paths, init_model)
+    print("[Federated] Final model weights:", model)

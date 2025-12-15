@@ -1,0 +1,9 @@
+meta_data = pd.DataFrame({
+    "patient_id": ehr_data["Patient ID"],
+    "source": "hospital_sensor",
+    "zone": np.random.choice(["Zone A", "Zone B", "Zone C"], size=100000),
+    "department": np.random.choice(["Cardiology", "Neurology", "General"], size=100000),
+    "data_type": "ehr_iot"
+})
+print("Metadata Tags:", meta_data.shape)
+meta_data.head()

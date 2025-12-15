@@ -1,0 +1,14 @@
+import pandas as pd
+import numpy as np
+
+def simulate_vitals(n=100):
+    np.random.seed(42)
+    data = pd.DataFrame({
+        "Patient ID": np.arange(1, n+1),
+        "Heart Rate": np.random.normal(75, 12, n).round(1),
+        "SpO2": np.random.normal(97.5, 1.2, n).round(1),
+        "Temperature": np.random.normal(36.8, 0.4, n).round(1),
+        "Steps": np.random.poisson(80, n),
+        "Prediction": np.random.choice(["Normal", "At Risk", "Critical"], n, p=[0.6, 0.3, 0.1])
+    })
+    return data

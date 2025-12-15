@@ -1,0 +1,11 @@
+from evaluate_vs_raw import train_model
+import pandas as pd
+
+def centralized_training_eval(path):
+    df = pd.read_csv(path)
+    acc, runtime = train_model(df)
+    print(f"[Centralized] Accuracy: {acc:.4f} | Time: {runtime:.2f}s")
+    return acc, runtime
+
+if __name__ == '__main__':
+    centralized_training_eval("data/anonymized_k5.csv")

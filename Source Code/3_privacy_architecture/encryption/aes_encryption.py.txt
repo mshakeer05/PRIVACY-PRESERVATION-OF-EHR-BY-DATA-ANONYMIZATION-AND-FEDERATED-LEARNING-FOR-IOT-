@@ -1,0 +1,50 @@
+from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+from Crypto.Random import get_random_bytes
+import base64
+import json
+
+class AESEncryptor:
+    def __init__(self, key=None):
+        self.key = key if key else get_random_bytes(32)  # AES-256
+        print(f"[AES] Encryption key: {base64.b64encode(self.key).decode()}")
+
+    def encrypt_weights(self, weights_dict):
+        cipher = AES.new(self.key, AES.MODE_CBC)
+        raw_data = json.dumps(weights_dict).encode()
+        ct_bytes = cipher.encrypt(pad(raw_data, AES.block_size))
+        iv = base64.b64encode(cipher.iv).decode()
+        ct = base64.b64encode(ct_bytes).decode()
+        print("[AES] Model weights encrypted.")
+        return {'iv': iv, 'ciphertext': ct}
+
+    def decrypt_weights(self, encrypted_data):
+        iv = base64.b64decode(encrypted_data['iv'])
+        ct = base64.b64decode(encrypted_data['ciphertext'])
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+        pt = unpad(cipher.decrypt(ct), AES.block_size)
+        weights_dict = json.loads(pt.decode())
+        print("[AES] Model weights decrypted.")
+        return weights_dict
+from aes_encryption import AESEncryptor
+from tls_communication import send_model_weights
+import threading
+import time
+
+# Simulated model weights from IoT device
+sample_model_weights = {
+    "layer1_w": [0.12, 0.15, 0.18],
+    "layer1_b": [0.01],
+    "layer2_w": [0.22, 0.25, 0.29],
+    "layer2_b": [0.03]
+}
+
+# Initialize AES and encrypt weights
+aes = AESEncryptor()
+encrypted_weights = aes.encrypt_weights(sample_model_weights)
+
+# Optionally decrypt locally (validation)
+# decrypted = aes.decrypt_weights(encrypted_weights)
+
+# Send over secure TLS channel
+send_model_weights(encrypted_weights)

@@ -1,0 +1,33 @@
+import React, { useState } from 'react';
+import axios from 'axios';
+
+function AnonymizationViewer() {
+  const [file, setFile] = useState('');
+  const [result, setResult] = useState(null);
+
+  const runAnonymize = () => {
+    axios.post('/api/anonymize', { filename: file, k: 5 })
+      .then(res => setResult(res.data))
+      .catch(() => alert('Failed to anonymize.'));
+  };
+
+  return (
+    <div style={{ marginBottom: '1.5rem' }}>
+      <h3>🔐 Run DIVA Anonymization</h3>
+      <input type="text" placeholder="e.g., ehr_sample.csv" value={file} onChange={e => setFile(e.target.value)} />
+      <button onClick={runAnonymize} style={{ marginLeft: '10px', background: 'green', color: 'white' }}>
+        Anonymize
+      </button>
+
+      {result && (
+        <div style={{ marginTop: '1rem' }}>
+          <p><strong>Output File:</strong> {result.anonymized_file}</p>
+          <p><strong>Info Loss:</strong> {result.info_loss.toFixed(4)}</p>
+          <p><strong>Disclosure Risk:</strong> {result.disclosure_risk.toFixed(4)}</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
+export default AnonymizationViewer;

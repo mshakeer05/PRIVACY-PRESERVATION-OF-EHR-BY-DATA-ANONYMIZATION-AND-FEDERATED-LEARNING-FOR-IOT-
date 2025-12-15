@@ -1,0 +1,45 @@
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+from evaluation_metrics import *
+
+@measure_runtime
+def train_model(df):
+    label_col = 'Primary diagnostic code'
+    X = df.drop(columns=[label_col])
+    y = LabelEncoder().fit_transform(df[label_col])
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    model = RandomForestClassifier(n_estimators=100)
+    model.fit(X_train, y_train)
+    acc = evaluate_accuracy(model, X_test, y_test)
+    return acc
+
+def evaluate_raw_vs_anonymized(raw_path, anon_path, qi_cols, k_val):
+    raw_df = pd.read_csv(raw_path)
+    anon_df = pd.read_csv(anon_path)
+
+    raw_acc, raw_time = train_model(raw_df)
+    anon_acc, anon_time = train_model(anon_df)
+
+    il = calculate_information_loss(raw_df, anon_df, qi_cols)
+    risk = calculate_disclosure_risk(anon_df, k_val)
+
+    return {
+        "raw_acc": raw_acc,
+        "anon_acc": anon_acc,
+        "raw_time": raw_time,
+        "anon_time": anon_time,
+        "info_loss": il,
+        "disclosure_risk": risk
+    }
+
+if __name__ == "__main__":
+    results = evaluate_raw_vs_anonymized(
+        "data/merged_raw.csv",
+        "data/anonymized_k5.csv",
+        ["Age", "Gender", "Postal Code"],
+        k_val=5
+    )
+    print("[Raw vs Anonymized Evaluation]")
+    for k, v in results.items():
+        print(f"{k}: {v}")

@@ -1,0 +1,54 @@
+from kafka import KafkaConsumer
+import json
+import numpy as np
+from aggregation.fedavg import fed_avg
+
+consumer = KafkaConsumer(
+    'federated_weights',
+    bootstrap_servers='localhost:9092',
+    auto_offset_reset='earliest',
+    group_id='fl-group',
+    value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+)
+
+model_updates = []
+
+print("[Kafka-Server] Listening for weights...")
+for message in consumer:
+    weights = message.value
+    client_id = weights['client_id']
+    print(f"[Kafka-Server] Got update from client-{client_id}")
+
+    weights = {k: np.array(v) for k, v in weights["weights"].items()}
+    model_updates.append(weights)
+
+    if len(model_updates) == 5:
+        updated = fed_avg(model_updates)
+        print("[Kafka-Server] New Aggregated Model:", updated)
+        model_updates.clear()
+
+def start_subscriber(mqtt=True):
+    if mqtt:
+        subprocess.run(["python", "mqtt/mqtt_subscriber_server.py"])
+    else:
+        subprocess.run(["python", "kafka/kafka_consumer.py"])
+
+def start_publishers(mqtt=True):
+    if mqtt:
+        subprocess.run(["python", "mqtt/mqtt_publisher_client.py"])
+    else:
+        subprocess.run(["python", "kafka/kafka_producer.py"])
+
+def run_federated_pipeline(mqtt=True):
+    print("[Orchestrator] Starting Server...")
+    t1 = threading.Thread(target=start_subscriber, args=(mqtt,))
+    t1.start()
+    time.sleep(3)
+
+    print("[Orchestrator] Launching Clients...")
+    t2 = threading.Thread(target=start_publishers, args=(mqtt,))
+    t2.start()
+
+if __name__ == '__main__':
+    run_federated_pipeline(mqtt=True)
+    # Set mqtt=False for Kafka mode

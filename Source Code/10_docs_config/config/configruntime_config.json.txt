@@ -1,0 +1,11 @@
+{
+  "enable_logging": true,
+  "log_retention_days": 7,
+  "serve_dashboard": true,
+  "use_mqtt": true,
+  "use_kafka": false,
+  "enable_ui": true,
+  "mode": "development",
+  "host": "localhost",
+  "port": 5000
+}

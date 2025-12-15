@@ -1,0 +1,19 @@
+from sklearn.preprocessing import MinMaxScaler, LabelEncoder
+
+# Drop NA from EHR for simplicity
+ehr_clean = ehr_data.dropna()
+
+# Encode categorical values
+categorical_cols = ["Gender", "Marital status", "Language"]
+for col in categorical_cols:
+    ehr_clean[col] = LabelEncoder().fit_transform(ehr_clean[col])
+
+# Normalize numeric features
+scaler = MinMaxScaler()
+numeric_cols = ["Age", "Population Percent below poverty line"]
+ehr_clean[numeric_cols] = scaler.fit_transform(ehr_clean[numeric_cols])
+
+# Merge EHR with IoT data on patient_id
+merged_data = pd.merge(ehr_clean, iot_data, left_on="Patient ID", right_on="patient_id", how="inner")
+print("Merged Data:", merged_data.shape)
+merged_data.head()

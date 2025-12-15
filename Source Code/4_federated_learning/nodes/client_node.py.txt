@@ -1,0 +1,21 @@
+import numpy as np
+import pandas as pd
+import random
+
+def train_local_model(client_id, data_path, initial_weights):
+    """Simulate local model training on anonymized data."""
+    df = pd.read_csv(data_path)
+    features = df.drop(columns=['Primary diagnostic code'], errors='ignore')
+    labels = pd.factorize(df['Primary diagnostic code'])[0] if 'Primary diagnostic code' in df else np.zeros(len(df))
+
+    X = features.values
+    y = labels
+
+    # Simulate training by generating pseudo-weight updates based on local data distribution
+    weight_update = {}
+    for key in initial_weights:
+        noise = np.random.normal(loc=0.0, scale=0.05, size=np.array(initial_weights[key]).shape)
+        weight_update[key] = np.array(initial_weights[key]) + noise
+
+    print(f"[Client-{client_id}] Finished local training with shape {X.shape}")
+    return weight_update

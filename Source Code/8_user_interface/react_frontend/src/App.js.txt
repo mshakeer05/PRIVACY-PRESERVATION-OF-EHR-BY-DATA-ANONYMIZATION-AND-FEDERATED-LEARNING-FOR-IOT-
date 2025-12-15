@@ -1,0 +1,17 @@
+import React from 'react';
+import UploadForm from './components/UploadForm';
+import AnonymizationViewer from './components/AnonymizationViewer';
+import FLStatus from './components/FLStatus';
+
+function App() {
+  return (
+    <div style={{ padding: '2rem' }}>
+      <h1>🛡️ FL + Anonymization Control Panel</h1>
+      <UploadForm />
+      <AnonymizationViewer />
+      <FLStatus />
+    </div>
+  );
+}
+
+export default App;
