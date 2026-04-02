@@ -1,7 +1,7 @@
-🏥 EMRBots: Privacy-Preserving Healthcare Data Framework with Federated Learning
+🏥 PRIVACY PRESERVATION OF EHR BY DATA ANONYMIZATION AND FEDERATED LEARNING FOR IOT
 📌 Overview
 
-EMRBots is a complete end-to-end framework for secure, privacy-preserving healthcare data processing and analytics. It integrates:
+Privacy Preservation of EHR By Data Anonymization is a complete end-to-end framework for secure, privacy-preserving healthcare data processing and analytics. It integrates:
 
 📊 Data ingestion & preprocessing
 
