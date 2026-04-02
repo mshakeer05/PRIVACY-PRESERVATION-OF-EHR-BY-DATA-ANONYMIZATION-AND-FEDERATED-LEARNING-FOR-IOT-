@@ -4,11 +4,17 @@
 EMRBots is a complete end-to-end framework for secure, privacy-preserving healthcare data processing and analytics. It integrates:
 
 📊 Data ingestion & preprocessing
+
 🔐 Data anonymization using advanced diversity constraints (DiVA-based models)
+
 🛡️ Privacy architecture (encryption + secure communication)
+
 🤝 Federated Learning (FL) for distributed model training
+
 📡 Real-time IoT simulation & messaging (Kafka + MQTT)
+
 📈 Evaluation and visualization
+
 🖥️ Web-based dashboard and UI
 
 This system is designed for Electronic Medical Records (EMR) environments to ensure compliance with data privacy, scalability, and utility preservation.
@@ -17,45 +23,81 @@ This system is designed for Electronic Medical Records (EMR) environments to ens
 EMRBots/
 │
 ├── Datasets_Sample/
+
 ├── Manuscript_Images/
+
 ├── Source Code/
+
 │   ├── 1_data_pipeline/
+
 │   ├── 2_data_anonymization/
+
 │   ├── 3_privacy_architecture/
+
 │   ├── 4_federated_learning/
+
 │   ├── 5_integration/
+
 │   ├── 6_evaluation/
+
 │   ├── 7_application_simulation/
+
 │   ├── 8_user_interface/
+
 │   └── 9_security_logging/
+
 📊 Datasets
+
 1. EMR Patients Dataset (Synthetic Healthcare Data)
 
 This dataset simulates hospital EMR records.
 
 Files
-AdmissionsCorePopulatedTable.txt
-AdmissionsDiagnosesCorePopulatedTable.txt
-PatientCorePopulatedTable.txt
+
+AdmissionsCorePopulatedTable.py
+
+AdmissionsDiagnosesCorePopulatedTable.py
+
+PatientCorePopulatedTable.py
+
 Attribute Details
+
 Patient Table
+
 PatientID: Unique identifier
+
 Gender: Male/Female
+
 DateOfBirth: Patient birth date
+
 Race: Ethnicity
+
 MaritalStatus
+
 Language
+
 Admissions Table
+
 AdmissionID
+
 PatientID
+
 AdmissionDate
+
 DischargeDate
+
 AdmissionType
+
 HospitalUnit
+
 Diagnoses Table
+
 DiagnosisCode
+
 DiagnosisDescription
+
 SeverityLevel
+
 2. Breast Cancer Dataset (WDBC)
 
 Files:
