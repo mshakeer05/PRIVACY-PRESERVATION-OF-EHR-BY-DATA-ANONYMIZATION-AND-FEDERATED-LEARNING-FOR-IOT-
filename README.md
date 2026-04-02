@@ -103,28 +103,48 @@ SeverityLevel
 Files:
 
 wdbc.data
+
 wdbc.names
+
 Attribute Details
+
 ID: Patient ID
+
 Diagnosis: M (Malignant), B (Benign)
+
 Features (30 attributes):
+
 Radius, Texture, Perimeter, Area
+
 Smoothness, Compactness
+
 Concavity, Symmetry
+
 Fractal Dimension
+
+
 3. IoT Healthcare Dataset
 
 Located in:
 
 1_data_pipeline/iot_data/
+
 Attributes
+
 sensor_id
+
 timestamp
+
 heart_rate
+
 blood_pressure
+
 oxygen_level
+
 temperature
+
 🔐 Diversity Constraints
+
 
 Diversity constraints are used in anonymization to ensure fair distribution and privacy.
 
@@ -154,6 +174,7 @@ sensor_type(Temperature) [100, 500]
 Diagnosis(Malignant) [200, 300]
 Diagnosis(Benign) [200, 300]
 ⚙️ Source Code Modules
+
 1️⃣ Data Pipeline
 
 Handles ingestion, preprocessing, and metadata.
@@ -165,6 +186,7 @@ Features
 Missing value handling
 Data normalization
 Schema generation
+
 2️⃣ Data Anonymization (DiVA Framework)
 
 Directory:
@@ -181,7 +203,9 @@ k-anonymity
 l-diversity
 t-closeness
 Optimization strategies
+
 3️⃣ Privacy Architecture
+
 Encryption
 aes_encryption.py
 Communication
@@ -190,7 +214,9 @@ Features
 AES-based encryption
 TLS-secured communication
 Secure data exchange
+
 4️⃣ Federated Learning
+
 Aggregation
 fedavg.py
 Nodes
@@ -201,7 +227,9 @@ Features
 Decentralized training
 Privacy-preserving updates
 Secure model aggregation
+
 5️⃣ Integration Layer
+
 Kafka
 kafka_producer.py
 kafka_consumer.py
@@ -212,7 +240,9 @@ mqtt_broker_sim.py
 Features
 Real-time data streaming
 Distributed communication
+
 6️⃣ Evaluation
+
 Files
 evaluate_centralized.py
 evaluate_federated.py
@@ -224,7 +254,9 @@ Recall
 F1-score
 Information Loss
 Execution Time
+
 7️⃣ Application Simulation
+
 Files
 dashboard.py
 health_predictor.py
@@ -233,7 +265,9 @@ Features
 Real-time alerts
 Health prediction
 Simulation environment
+
 8️⃣ User Interface
+
 Frontend
 React (App.js, index.js)
 Backend
@@ -245,7 +279,9 @@ Features
 Dataset upload
 Visualization dashboard
 Anonymization viewer
+
 9️⃣ Security Logging
+
 Files
 security_logger.py
 anomaly_detector.py
@@ -254,6 +290,7 @@ Features
 Intrusion detection
 Log monitoring
 Threat analysis
+
 📈 Results & Visualizations
 
 Located in:
@@ -265,7 +302,9 @@ Data Flow Diagram
 Information Loss Analysis
 Execution Time Analysis
 Scalability Analysis
+
 🔄 Workflow
+
 Data Collection
 Preprocessing
 Anonymization (DiVA)
@@ -273,7 +312,9 @@ Encryption
 Federated Learning
 Evaluation
 Visualization
+
 🚀 How to Run
+
 Step 1: Install Dependencies
 pip install -r requirements.txt
 Step 2: Run Data Pipeline
@@ -286,14 +327,25 @@ python fedavg.py
 Step 5: Launch UI
 cd flask_app
 python app.py
+
 🧠 Key Contributions
+
 ✅ Privacy-preserving EMR framework
+
 ✅ Advanced DiVA anonymization
+
 ✅ Secure federated learning
+
 ✅ Real-time IoT integration
+
 ✅ Full-stack implementation
+
 📚 Applications
+
 Smart Healthcare Systems
+
 Remote Patient Monitoring
+
 Medical Research
+
 Privacy-Aware AI Systems
